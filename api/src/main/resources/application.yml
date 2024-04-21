@@ -1,0 +1,34 @@
+server:
+  port: 8080
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger.html
+    enabled: true
+    operationsSorter: method
+
+spring:
+  application:
+    name: bugtrack
+  devtools:
+    livereload:
+      enabled: true
+  datasource:
+    initialize: true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DATASOURCE_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+  sql:
+    init:
+      mode:
+        always
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+auth:
+  jwt:
+    signing-key: ${JWT_SIGNING_KEY}

@@ -1,0 +1,8 @@
+FROM eclipse-temurin:21
+RUN apt update && \
+    apt-get install -y net-tools netcat
+WORKDIR /app
+COPY . /app
+EXPOSE 8080
+RUN chmod +x start.sh && ./gradlew getDependencies
+CMD ["./wait-for", "db:3306", "--", "sh", "start.sh"]

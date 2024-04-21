@@ -1,0 +1,38 @@
+services:
+  db:
+    image: mysql
+    container_name: bugtrack_db_dev
+    ports:
+      - "3306:3306"
+    restart: always
+    env_file:
+      - ./api/.env
+    volumes:
+      - data_dev:/var/lib/mysql
+    networks:
+      - net_dev
+  
+  api:
+    container_name: bugtrack_api_dev
+    image: bugtrack/api_dev
+    env_file:
+      - ./api/.env
+    build: 
+      context: ./api
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - db
+    volumes:
+      - ./api/src/main:/app/src/main
+    networks:
+      - net_dev
+
+volumes:
+  data_dev:
+
+networks:
+  net_dev:
+
