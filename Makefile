@@ -36,4 +36,4 @@ watch:
 shell-db: ## Open shell in database container
 shell-db:
 	docker compose -f ${DOCKER_COMPOSE_FILE} exec db mysql -p
-	
+

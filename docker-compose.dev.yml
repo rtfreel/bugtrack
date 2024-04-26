@@ -30,6 +30,22 @@ services:
     networks:
       - net_dev
 
+  ui:
+    container_name: bugtrack_ui_dev
+    image: bugtrack/ui_dev
+    build:
+      context: ./ui
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    restart: always
+    depends_on:
+      - api
+    volumes:
+      - ./ui:/app
+    networks:
+      - net_dev
+
 volumes:
   data_dev:
 
