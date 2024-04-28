@@ -1,4 +1,4 @@
-DOCKER_COMPOSE_FILE ?= docker-compose.yml
+DOCKER_COMPOSE_FILE ?= docker-compose.dev.yml
 DANGLING_IMAGES := $(shell docker images -f "dangling=true" -q)
 
 # RUN AND MANAGE
