@@ -1,7 +1,9 @@
 import { writable } from "svelte/store";
 import type { User } from "./types/User";
 import type { AuthState } from "./types/AuthState";
-import AuthService from "./service";
+import { AuthService } from "./service";
+
+const service = new AuthService();
 
 function createAuthState() {
     const userJson = localStorage.getItem("user");
@@ -13,7 +15,7 @@ function createAuthState() {
     const { subscribe, set } = writable<AuthState>(initialState);
 
     const signIn = function(user: User) {
-        return AuthService.signIn(user)?.then(
+        return service.signIn(user)?.then(
             response => {
                 set({ user: response, signedIn: true });
                 return Promise.resolve(response);
@@ -26,10 +28,10 @@ function createAuthState() {
     }
     const signOut = function() {
         set({ user: null, signedIn: false });
-        return AuthService.signOut();
+        return service.signOut();
     }
     const signUp = function(user: User) {
-        return AuthService.signUp(user)?.then(
+        return service.signUp(user)?.then(
             response => {
                 set({ user: null, signedIn: false });
                 return Promise.resolve(response);

@@ -4,7 +4,6 @@
     import SignIn from "./lib/pages/SignIn.svelte";
     import Secret from "./lib/pages/Secret.svelte";
     import ProtectedRoute from "./lib/auth/components/ProtectedRoute.svelte";
-
 </script>
 
 <Router>

@@ -4,7 +4,7 @@ import type { SignInData, SignUpData } from "./types/SignData";
 
 const API_ENDPOINT = "http://localhost:8080/auth/";
 
-class AuthService {
+export class AuthService {
     signIn(user: User): Promise<User> | null {
         if (!user.password) {
             return null;
@@ -42,4 +42,3 @@ class AuthService {
     }
 }
 
-export default new AuthService();
