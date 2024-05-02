@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import rt.bugtrack.auth.dto.UserDTO;
 import rt.bugtrack.auth.entity.User;
 import rt.bugtrack.auth.repository.UserRepository;
 
@@ -27,5 +28,14 @@ public class UserService {
             throw new RuntimeException("User already exists");
         }
         return repository.save(user);
+    }
+
+    public UserDTO getUserDTO(User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .build();
     }
 }

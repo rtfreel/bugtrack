@@ -26,9 +26,9 @@ import lombok.NoArgsConstructor;
 @Table(name="user")
 public class User implements UserDetails{
     @Id
-    @Column(name="user_id")
+    @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Size(max=64)
     @Column(length=64)
