@@ -24,13 +24,17 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectHistoryRepository projectHistoryRepository;
 
+    private boolean isEditable(User user, Project project) {
+        return user.getId() == project.getOwner().getId();
+    }
+
     public ProjectDTO getProjectDTO(User user, Project project) {
         return ProjectDTO.builder()
                 .id(project.getId())
-                .owner(userService.getUserDTO(user))
+                .owner(userService.getUserDTO(project.getOwner()))
                 .title(project.getTitle())
                 .description(project.getDescription())
-                .editable(user.getId() == project.getOwner().getId())
+                .editable(isEditable(user, project))
                 .build();
     }
 
@@ -48,25 +52,13 @@ public class ProjectService {
     public ProjectDTO getProject(User user, Integer id) {
         Optional<Project> project = projectRepository.findById(id);
         if (project.isEmpty()) {
-            return null;
+            throw new RuntimeException("Project not found");
         }
         return getProjectDTO(user, project.get());
     }
 
-    public List<ProjectDTO> getProjects(User user) {
-        return projectRepository.findAll().stream()
-                .map(project -> getProjectDTO(user, project))
-                .toList();
-    }
-
     public List<ProjectDTO> getProjects(User user, String query) {
         return projectRepository.findByTitleContainingIgnoreCase(query).stream()
-                .map(project -> getProjectDTO(user, project))
-                .toList();
-    }
-
-    public List<ProjectDTO> getUserProjects(User user) {
-        return projectRepository.findByOwner(user).stream()
                 .map(project -> getProjectDTO(user, project))
                 .toList();
     }
@@ -101,12 +93,18 @@ public class ProjectService {
         return getProjectDTO(user, newProject);
     }
 
-    public void updateProject(User user, Integer id, ProjectDTO project) {
-        Optional<Project> newProject = projectRepository.findById(id);
-        if (newProject.isEmpty()) {
-            throw new IllegalArgumentException("Project not found");
+    public ProjectDTO updateProject(User user, Integer id, ProjectDTO project) {
+        Project existingProject = projectRepository.findById(id).orElseThrow();
+        if (!isEditable(user, existingProject)) {
+            throw new RuntimeException("Project not editable");
         }
-        projectRepository.updateProject(id, project.getTitle(), project.getDescription());
+        if (existingProject.getTitle().equals(project.getTitle())
+                && existingProject.getDescription().equals(project.getDescription())) {
+            return getProjectDTO(user, existingProject);
+        }
+        existingProject.setTitle(project.getTitle());
+        existingProject.setDescription(project.getDescription());
+        existingProject = projectRepository.save(existingProject);
         ProjectHistory projectHistory = ProjectHistory.builder()
                 .user(user)
                 .projectId(id)
@@ -115,5 +113,6 @@ public class ProjectService {
                 .changeTime(new Date())
                 .build();
         projectHistoryRepository.save(projectHistory);
+        return getProjectDTO(user, existingProject);
     }
 }

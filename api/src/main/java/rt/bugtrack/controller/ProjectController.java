@@ -1,4 +1,4 @@
-package rt.bugtrack.core.project.controller;
+package rt.bugtrack.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,20 +29,14 @@ public class ProjectController {
     public List<ProjectDTO> getAllProjects(
             @AuthenticationPrincipal UserDetails details,
             @PathVariable Optional<String> query) {
-        if (query.isPresent()) {
-            return projectService.getProjects((User)details, query.get());
-        }
-        return projectService.getProjects((User)details);
+        return projectService.getProjects((User)details, query.isPresent() ? query.get() : "");
     }
 
-    @GetMapping(value = { "/list/my", "/list/my/{query}" })
-    public List<ProjectDTO> getMyProjects(
+    @GetMapping(value = { "/list/user", "/list/user/{query}" })
+    public List<ProjectDTO> getUserProjects(
             @AuthenticationPrincipal UserDetails details,
             @PathVariable Optional<String> query) {
-        if (query.isPresent()) {
-            return projectService.getUserProjects((User)details, query.get());
-        }
-        return projectService.getUserProjects((User)details);
+        return projectService.getUserProjects((User)details, query.isPresent() ? query.get() : "");
     }
 
     @GetMapping(value = "/{id}")
@@ -67,10 +61,10 @@ public class ProjectController {
     }
 
     @PutMapping(value = "/{id}")
-    public void updateProject(
+    public ProjectDTO updateProject(
             @AuthenticationPrincipal UserDetails details,
             @PathVariable Integer id, 
             @RequestBody ProjectDTO project) {
-        projectService.updateProject((User)details, id, project);
+        return projectService.updateProject((User)details, id, project);
     }
 }

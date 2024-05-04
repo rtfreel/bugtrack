@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS bug_history (
     status VARCHAR(255) NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT,
+    steps_updated TINYINT(1) NOT NULL,
     change_time DATETIME NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (bug_id) REFERENCES bug(id),
