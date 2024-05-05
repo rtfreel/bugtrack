@@ -1,16 +1,19 @@
 <script lang="ts">
     import { Route, Router } from "svelte-routing";
     import Home from "./lib/pages/Home.svelte";
-    import SignIn from "./lib/pages/SignIn.svelte";
     import Secret from "./lib/pages/Secret.svelte";
     import ProtectedRoute from "./lib/auth/components/ProtectedRoute.svelte";
+    import Auth from "./lib/pages/Auth.svelte";
 </script>
 
 <Router>
-    <Route path="/" component={Home} />
-    <Route path="/signin" component={SignIn} />
-    <ProtectedRoute path="/secret" component={Secret} />
+    <Route path="/"><Home/></Route>
+    <Route path="/auth"><Auth/></Route>
+    <ProtectedRoute path="/secret"><Secret/></ProtectedRoute>
 </Router>
 
-<style>
+<style global>
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
 </style>

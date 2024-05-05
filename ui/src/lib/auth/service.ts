@@ -5,13 +5,10 @@ import type { SignInData, SignUpData } from "./types/SignData";
 const API_ENDPOINT = "http://localhost:8080/auth/";
 
 export class AuthService {
-    signIn(user: User): Promise<User> | null {
-        if (!user.password) {
-            return null;
-        }
+    signIn(user: User): Promise<User> {
         const data: SignInData = {
             username: user.username,
-            password: user.password
+            password: user.password || ""
         };
         return axios
             .post(API_ENDPOINT + "signin", data)
