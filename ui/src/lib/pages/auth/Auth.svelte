@@ -1,9 +1,10 @@
 <script lang="ts">
-    import SignIn from "../auth/components/forms/SignIn.svelte";
-    import SignUp from "../auth/components/forms/SignUp.svelte";
-    import { SignOptions } from "../auth/types/SignOptions";
+    import SignIn from "../../auth/components/forms/SignIn.svelte";
+    import SignUp from "../../auth/components/forms/SignUp.svelte";
+    import { SignOptions } from "../../auth/types/SignOptions";
 
     export let sign = SignOptions.SIGNIN;
+    export let errorMessage = "";
 </script>
 
 <div class="container h-full flex flex-col items-center mx-auto">
@@ -15,7 +16,7 @@
         {#each Object.values(SignOptions) as signOption}
             <a
                 class="tab mx-1 {signOption === sign ? 'active-tab' : ''}"
-                on:click={() => (sign = signOption)}
+                on:click={() => (sign = signOption, errorMessage = "")}
                 href="#{ signOption.replace(/ /g, '-') }"
             >
                 {signOption}
@@ -23,9 +24,12 @@
         {/each}
     </nav>
     {#if sign === SignOptions.SIGNIN}
-        <SignIn />
-    {:else if sign === SignOptions.SIGNUP}
+        <SignIn on:fail={(e) => (errorMessage = e.detail)} />
+    {:else}
         <SignUp />
+    {/if}
+    {#if errorMessage}
+        <p class="text-red-500 mt-4">{errorMessage}</p>
     {/if}
 </div>
 

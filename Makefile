@@ -17,7 +17,7 @@ run: ## Run the entire application
 run: 
 	docker compose -f ${DOCKER_COMPOSE_FILE} up
 
-rund: ## Run the entire application in detach mode
+rund: ## Run the entire application in background
 rund:
 	docker compose -f ${DOCKER_COMPOSE_FILE} up --detach
 

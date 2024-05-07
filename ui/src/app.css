@@ -1,9 +1,3 @@
-body {
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-}
-
 :root {
     /* Theme colors */
     --color-primary-100:  #66c547;
@@ -22,19 +16,28 @@ body {
 
     --primary-text: #E0E0E0;
 
+    background-color: var(--color-surface-100);
     color: var(--primary-text);
     font-size: 1.3rem;
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     font-weight: 400;
 
-    background-color: var(--color-surface-100);
-
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
+}
+
+html {
+    background-color: var(--color-surface-100);
+}
+body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-surface-100);
 }
 
 /* selection color */

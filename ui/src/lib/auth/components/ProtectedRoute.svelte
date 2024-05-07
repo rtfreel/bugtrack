@@ -1,13 +1,15 @@
 <script lang="ts">
-    import { Route } from 'svelte-routing';
-    import { authState } from '../state';
-    import AccessDenied from '../../pages/AccessDenied.svelte';
+    import { Route } from "svelte-routing";
+    import { authState } from "../state";
+    import Auth from "../../pages/auth/Auth.svelte";
 
     export let path: string;
 </script>
 
 {#if $authState.signedIn}
-    <Route path={path}><slot></slot></Route>
+    <Route {path} let:params>
+        <slot {params} />
+    </Route>
 {:else}
-    <Route path={path}><AccessDenied/></Route>
+    <Route {path}><Auth errorMessage="Please, sign in first!" /></Route>
 {/if}

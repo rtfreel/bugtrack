@@ -1,19 +1,37 @@
 <script lang="ts">
     import { Route, Router } from "svelte-routing";
-    import Home from "./lib/pages/Home.svelte";
-    import Secret from "./lib/pages/Secret.svelte";
+    import Projects from "./lib/pages/projects/Projects.svelte";
     import ProtectedRoute from "./lib/auth/components/ProtectedRoute.svelte";
-    import Auth from "./lib/pages/Auth.svelte";
+    import Auth from "./lib/pages/auth/Auth.svelte";
+    import Project from "./lib/pages/projects/Project.svelte";
 </script>
 
 <Router>
-    <Route path="/"><Home/></Route>
-    <Route path="/auth"><Auth/></Route>
-    <ProtectedRoute path="/secret"><Secret/></ProtectedRoute>
+    <Route path="/auth"><Auth /></Route>
+    <ProtectedRoute path="/">
+        <Projects
+            path={[
+                { name: "Projects", ref: "/" },
+                { name: "All", ref: "/" },
+            ]}
+        />
+    </ProtectedRoute>
+    <ProtectedRoute path="/owned">
+        <Projects
+            path={[
+                { name: "Projects", ref: "/" },
+                { name: "Owned", ref: "/owned" },
+            ]}
+            owned={true}
+        />
+    </ProtectedRoute>
+    <ProtectedRoute path="/project/:projectId" let:params>
+        <Project path={[{ name: "Projects", ref: "/" }]} projectId={+params.projectId} />
+    </ProtectedRoute>
 </Router>
 
 <style global>
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
 </style>

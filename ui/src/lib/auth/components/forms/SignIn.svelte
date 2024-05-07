@@ -1,12 +1,25 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
     import { authState } from "../../state";
-
 
     let username = "";
     let password = "";
 
+    const dispatch = createEventDispatcher();
+
     function signIn() {
-        console.log(authState.signIn({ username: username, password: password }));
+        let result = authState.signIn({
+            username: username,
+            password: password,
+        });
+        if (result) {
+            result.then(
+                () => (window.location.href = "/"),
+                () => dispatch("fail", "Invalid username or password!")
+            );
+        } else {
+            dispatch("fail", "Invalid username or password!");
+        }
     }
 </script>
 
