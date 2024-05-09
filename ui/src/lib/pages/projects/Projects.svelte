@@ -5,7 +5,7 @@
     import type { PathItem } from "../../common/types/PathItem";
     import type { Project } from "../../core/types/Project";
     import { onMount } from "svelte";
-    import ProjectCard from "../../core/components/ProjectCard.svelte";
+    import ProjectCard from "../../core/components/projects/ProjectCard.svelte";
 
     export let path: PathItem[] = [];
     export let owned: boolean = false;
@@ -13,7 +13,9 @@
     const service = new ProjectService();
     let projects: Project[] = [];
     function refreshProjects(query?: string) {
-        const listQuery = (owned ? service.getOwnedProjects : service.getProjects);
+        const listQuery = owned
+            ? service.getOwnedProjects
+            : service.getProjects;
         listQuery(query).then((response) => {
             projects = response;
         });
@@ -29,14 +31,12 @@
 </script>
 
 <Navbar {path} />
-
-<Searchbar on:input={onSearch} />
-
+<Searchbar on:input={onSearch}>
+    <!-- TODO: project creation -->
+    <button class="primary mt-3 ms-4">New +</button>
+</Searchbar>
 <div class="container grid grid-cols-3 mx-auto mt-3">
     {#each projects as project}
         <ProjectCard {project} />
     {/each}
 </div>
-
-<style>
-</style>

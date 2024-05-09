@@ -1,18 +1,18 @@
 :root {
     /* Theme colors */
-    --color-primary-100:  #66c547;
-    --color-primary-200:  #7acc5d;
-    --color-primary-300:  #8cd372;
-    --color-primary-400:  #9ed986;
-    --color-primary-500:  #afe09a;
-    --color-primary-600:  #bfe6ae;
+    --color-primary-100: #66c547;
+    --color-primary-200: #7acc5d;
+    --color-primary-300: #8cd372;
+    --color-primary-400: #9ed986;
+    --color-primary-500: #afe09a;
+    --color-primary-600: #bfe6ae;
 
-    --color-surface-100:  #0c0c0c;
-    --color-surface-200:  #242424;
-    --color-surface-300:  #3b3b3b;
-    --color-surface-400:  #545454;
-    --color-surface-500:  #6e6e6e;
-    --color-surface-600:  #898989;
+    --color-surface-100: #0c0c0c;
+    --color-surface-200: #242424;
+    --color-surface-300: #3b3b3b;
+    --color-surface-400: #545454;
+    --color-surface-500: #6e6e6e;
+    --color-surface-600: #898989;
 
     --primary-text: #E0E0E0;
 
@@ -33,6 +33,7 @@
 html {
     background-color: var(--color-surface-100);
 }
+
 body {
     height: 100vh;
     margin: 0;
@@ -42,17 +43,24 @@ body {
 
 /* selection color */
 ::-moz-selection {
-  color: var(--color-surface-100);
-  background: var(--color-primary-100);
+    color: var(--color-surface-100);
+    background: var(--color-primary-100);
 }
+
 ::selection {
-  color: var(--color-surface-100);
-  background: var(--color-primary-100);
+    color: var(--color-surface-100);
+    background: var(--color-primary-100);
 }
 
 #app {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
+}
+
+hr {
+    border-color: var(--color-surface-500);
 }
 
 a {
@@ -69,11 +77,13 @@ button.primary {
     color: var(--color-surface-100) !important;
     transition: all 0.15s ease-in-out;
 }
+
 button.primary:hover {
     border-color: rgba(255, 255, 255, 0.5);
     background-color: var(--color-primary-200) !important;
     transition: all 0.15s ease-in-out;
 }
+
 button.primary:focus,
 button.primary:focus-visible {
     outline: 4px auto -webkit-focus-ring-color !important;
@@ -87,12 +97,35 @@ input {
     color: var(--color-surface-600);
     transition: all 0.15s ease-in-out;
 }
+
 input:hover {
     border-color: var(--color-primary-100);
     transition: all 0.15s ease-in-out;
 }
+
 input:focus,
 input:focus-visible {
+    outline: none;
+    border-color: var(--color-primary-100) !important;
+    transition: all 0.15s ease-in-out;
+}
+
+textarea {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 2px 8px !important;
+    background-color: var(--color-surface-200);
+    color: var(--color-surface-600);
+    transition: all 0.15s ease-in-out;
+}
+
+textarea:hover {
+    border-color: var(--color-primary-100);
+    transition: all 0.15s ease-in-out;
+}
+
+textarea:focus,
+textarea:focus-visible {
     outline: none;
     border-color: var(--color-primary-100);
     transition: all 0.15s ease-in-out;

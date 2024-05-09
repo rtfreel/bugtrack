@@ -1,12 +1,11 @@
-<div class="container mx-auto">
-    <div class="flex flex-row items-center">
-        <input
-            id="search"
-            class="w-3/4 mt-3 mx-auto"
-            placeholder="Search..."
-            on:input
-        />
-    </div>
+<div class="container flex flex-row justify-center items-center mx-auto">
+    <input
+        id="search"
+        class="w-3/4 mt-3"
+        placeholder="Search..."
+        on:input
+    />
+    <slot></slot>
 </div>
 
 <style>

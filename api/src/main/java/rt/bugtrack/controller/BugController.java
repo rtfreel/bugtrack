@@ -48,12 +48,11 @@ public class BugController {
         return bugService.getProjectBugs((User)details, projectId, query.getStatuses(), query.getQuery());
     }
 
-    @PostMapping(value = { "/list/project={projectId}/reported" })
-    public List<BugDTO> getReportedProjectBugs(
+    @PostMapping(value = { "/list/reported" })
+    public List<BugDTO> getReportedBugs(
             @AuthenticationPrincipal UserDetails details,
-            @PathVariable Integer projectId,
             @RequestBody BugListRequest query) {
-        return bugService.getReportedProjectBugs((User)details, projectId, query.getStatuses(), query.getQuery());
+        return bugService.getReportedBugs((User)details, query.getStatuses(), query.getQuery());
     }
 
     @PostMapping(value = "/")

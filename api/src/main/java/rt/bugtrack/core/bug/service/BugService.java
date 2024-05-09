@@ -95,7 +95,7 @@ public class BugService {
                 .toList();
     }
 
-    public List<BugDTO> getReportedProjectBugs(User user, Integer projectId, List<Status> statuses, String query) {
+    public List<BugDTO> getReportedBugs(User user, Integer projectId, List<Status> statuses, String query) {
         return bugRepository.findByProjectIdAndReporterAndStatusInAndTitleContainingIgnoreCase(projectId, user, statuses, query).stream()
                 .map(bug -> getBugDTO(user, bug))
                 .toList();

@@ -25,4 +25,11 @@ export class ProjectService {
             .get(url, { headers: authHeader });
         return response.data as Project;
     }
+
+    async saveProject(project: Project): Promise<Project> {
+        const url = API_ENDPOINT + project.id;
+        const response = await axios
+            .put(url, project, { headers: authHeader });
+        return response.data as Project;
+    }
 }
