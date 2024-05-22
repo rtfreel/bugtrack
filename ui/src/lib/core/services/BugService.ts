@@ -16,24 +16,27 @@ export class BugService {
         return response.data as Bug[];
     }
 
-    //    async getBugs(query: string | undefined): Promise<Bug[]> {
-    //        const url = API_ENDPOINT + "list/all" + (query ? "/" + query : "");
-    //        const response = await axios
-    //            .get(url, { headers: authHeader });
-    //        return response.data as Project[];
-    //    }
-    //
-    //    async getProject(id: number): Promise<Project> {
-    //        const url = API_ENDPOINT + id;
-    //        const response = await axios
-    //            .get(url, { headers: authHeader });
-    //        return response.data as Project;
-    //    }
-    //
-    //    async saveProject(project: Project): Promise<Project> {
-    //        const url = API_ENDPOINT + project.id;
-    //        const response = await axios
-    //            .put(url, project, { headers: authHeader });
-    //        return response.data as Project;
-    //    }
+    async getProjectBugs(projectId: number, statuses: Status[], query: string | undefined): Promise<Bug[]> {
+        const url = API_ENDPOINT + "list/project=" + projectId + "/all";
+        const response = await axios
+            .post(url, {
+                query: query || "",
+                statuses: statuses || [Status.ACTIVE, Status.NEW, Status.CLOSED, Status.TESTING]
+            }, { headers: authHeader });
+        return response.data as Bug[];
+    }
+
+    async getBug(id: number): Promise<Bug> {
+        const url = API_ENDPOINT + id;
+        const response = await axios
+            .get(url, { headers: authHeader });
+        return response.data as Bug;
+    }
+
+    async saveBug(bug: Bug): Promise<Bug> {
+        const url = API_ENDPOINT + bug.id;
+        const response = await axios
+            .put(url, bug, { headers: authHeader });
+        return response.data as Bug;
+    }
 }

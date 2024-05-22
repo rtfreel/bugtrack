@@ -4,6 +4,8 @@
     import ProtectedRoute from "./lib/auth/components/ProtectedRoute.svelte";
     import Auth from "./lib/pages/auth/Auth.svelte";
     import Project from "./lib/pages/projects/Project.svelte";
+    import Bug from "./lib/pages/bugs/Bug.svelte";
+    import Bugs from "./lib/pages/bugs/Bugs.svelte";
 </script>
 
 <Router>
@@ -27,6 +29,12 @@
     </ProtectedRoute>
     <ProtectedRoute path="/project/:projectId" let:params>
         <Project path={[{ name: "Projects", ref: "/" }]} projectId={+params.projectId} />
+    </ProtectedRoute>
+    <ProtectedRoute path="/bugs/reported">
+        <Bugs />
+    </ProtectedRoute>
+    <ProtectedRoute path="/bug/:bugId" let:params>
+        <Bug bugId={+params.bugId} />
     </ProtectedRoute>
 </Router>
 

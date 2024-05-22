@@ -1,29 +1,28 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import Navbar from "../../common/components/Navbar.svelte";
-    import { ProjectService } from "../../core/services/ProjectService";
+    import { BugService } from "../../core/services/BugService";
     import type { PathItem } from "../../common/types/PathItem";
-    import type { Project } from "../../core/types/Project";
-    import BugList from "../../core/components/bugs/BugList.svelte";
-    import ProjectHistory from "../../core/components/projects/ProjectHistory.svelte";
+    import BugHistory from "../../core/components/bugs/BugHistory.svelte";
+    import type { Bug } from "../../core/types/Bug";
 
     export let path: PathItem[] = [];
-    export let projectId: number;
+    export let bugId: number = 0;
 
-    const service = new ProjectService();
-    let project: Project = {};
-    let editedProject: Project = {};
+    const service = new BugService();
+    let bug: Bug = {};
+    let editedBug: Bug = {};
 
     let editing: boolean = false;
 
-    function getProject(id: number) {
-        service.getProject(id).then((response) => {
-            project = response;
+    function getBug(id: number) {
+        service.getBug(id).then((response) => {
+            bug = response;
         });
     }
-    function saveProject(newProject: Project) {
-        service.saveProject(newProject).then((response) => {
-            project = response;
+    function saveBug(newBug: Bug) {
+        service.saveBug(newBug).then((response) => {
+            bug = response;
         });
     }
     function escapeDescription(description: string) {
@@ -32,10 +31,11 @@
         return tmpDiv.innerHTML.replace("\n", "<br />");
     }
     onMount(() => {
-        getProject(projectId);
+        getBug(bugId);
         path = [
             { name: "Projects", ref: "/" },
-            { name: "Project #" + projectId, ref: "/project/" + projectId },
+            { name: "Project #" + bug.projectId, ref: "/" },
+            { name: "Bug #" + bugId, ref: "/bug/" + bugId },
         ];
     });
 </script>
@@ -44,22 +44,22 @@
 <div class="container mx-auto pt-4">
     <div class="flex justify-between items-end min-h-7 my-0 p-0">
         <a
-            class="{project.editable ? 'editbtn' : ''} text-xs my-0"
+            class="{bug.editable ? 'editbtn' : ''} text-xs my-0"
             href="#edit"
-            title={project.editable
+            title={bug.editable
                 ? editing
                     ? "Cancel editing"
                     : "Edit project"
                 : ""}
-            on:click|preventDefault={project.editable
+            on:click|preventDefault={bug.editable
                 ? () => {
-                      editedProject = { ...project };
+                      editedBug = { ...bug };
                       editing = !editing;
                   }
                 : () => {}}
         >
             <span>
-                {#if project.editable}
+                {#if bug.editable}
                     <i
                         class="fa-solid
                         fa-{editing ? 'xmark' : 'pencil'}
@@ -70,14 +70,14 @@
                 {/if}
             </span>
             <span class="ms-1">
-                PROJECT #{projectId}
+                Bug #{bugId}
             </span>
         </a>
         {#if editing}
             <button
                 class="primary savebtn"
                 on:click={() => {
-                    saveProject(editedProject);
+                    saveBug(editedBug);
                     editing = false;
                 }}
             >
@@ -89,35 +89,34 @@
         <input
             type="text"
             class="text-3xl w-full mt-1 mb-3"
-            bind:value={editedProject.title}
+            bind:value={editedBug.title}
         />
         <textarea
             class="w-full"
             rows="6"
-            bind:value={editedProject.description}
+            bind:value={editedBug.description}
         />
     {:else}
-        <p id="project-title" class="text-4xl mt-0 mb-4">{project.title}</p>
+        <p id="title" class="text-4xl mt-0 mb-4">{bug.title}</p>
         <hr class="w-1/4 mt-0" />
         <p class="mt-2">
-            {@html project.description
-                ? escapeDescription(project.description)
+            {@html bug.description
+                ? escapeDescription(bug.description)
                 : ""}
         </p>
     {/if}
 </div>
-<div class="projectdata flex flex-row mt-4">
+<div class="flex flex-row flex-grow mt-4">
     <div class="w-2/3">
-        <div class="w-full text-xl text-center">Project bugs</div>
-        <BugList projectId={projectId} columns={2} />
+        <div class="w-full text-xl text-center">Bug data</div>
     </div>
     <div class="w-1/3">
-        <ProjectHistory />
+        <BugHistory />
     </div>
 </div>
 
 <style>
-    #project-title {
+    #title {
         font-weight: bold;
         color: var(--color-primary-400);
     }
@@ -130,7 +129,5 @@
     .savebtn {
         padding: 0 1rem;
     }
-    .projectdata {
-        flex-grow: 1;
-    }
 </style>
+

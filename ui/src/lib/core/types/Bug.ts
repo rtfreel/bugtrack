@@ -4,8 +4,9 @@ import type { User } from "./User"
 export type Bug = {
     id?: number,
     projectId?: number,
-    reporter: User,
+    reporter?: User,
     title?: string,
     description?: string,
-    status?: Status
+    status?: Status,
+    editable?: boolean
 }

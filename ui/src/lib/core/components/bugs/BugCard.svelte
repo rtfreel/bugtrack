@@ -4,21 +4,14 @@
     export let bug: Bug;
 </script>
 
-<a class="bug-card px-4 py-2" href="/project/{bug.id}">
+<a class="bug-card px-4 py-2" href="/bug/{bug.id}">
     <div class="project-title single-line font-bold">
         <i class="fa-solid fa-bug" /> #{bug.id}
         {bug.title}
     </div>
     <div class="single-line">{bug.description}</div>
     <div class="single-line">
-        Status: <span>
-            {bug.reporter?.firstName +
-                " " +
-                bug.reporter?.lastName +
-                " (" +
-                bug.reporter?.username +
-                ")"}
-        </span>
+        Status: <span> {bug.status} </span>
     </div>
     <div class="single-line">
         Reported by: <span>
