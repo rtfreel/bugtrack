@@ -6,6 +6,8 @@
     import type { Project } from "../../core/types/Project";
     import BugList from "../../core/components/bugs/BugList.svelte";
     import ProjectHistory from "../../core/components/projects/ProjectHistory.svelte";
+    import type { ProjectHistory as ProjectHistoryItem } from "../../core/types/Project";
+    import { escapeDescription } from "../../common/utils/formatting";
 
     export let path: PathItem[] = [];
     export let projectId: number;
@@ -13,26 +15,20 @@
     const service = new ProjectService();
     let project: Project = {};
     let editedProject: Project = {};
+    let history: ProjectHistoryItem[] = [];
 
     let editing: boolean = false;
 
-    function getProject(id: number) {
-        service.getProject(id).then((response) => {
-            project = response;
-        });
+    async function getProject(id: number) {
+        project = await service.getProject(id);
+        history = await service.getHistory(id);
     }
-    function saveProject(newProject: Project) {
-        service.saveProject(newProject).then((response) => {
-            project = response;
-        });
+    async function saveProject(newProject: Project) {
+        project = await service.saveProject(newProject);
+        history = await service.getHistory(projectId);
     }
-    function escapeDescription(description: string) {
-        let tmpDiv = document.createElement("div");
-        tmpDiv.innerText = description;
-        return tmpDiv.innerHTML.replace("\n", "<br />");
-    }
-    onMount(() => {
-        getProject(projectId);
+    onMount(async () => {
+        await getProject(projectId);
         path = [
             { name: "Projects", ref: "/" },
             { name: "Project #" + projectId, ref: "/project/" + projectId },
@@ -112,7 +108,7 @@
         <BugList projectId={projectId} columns={2} />
     </div>
     <div class="w-1/3">
-        <ProjectHistory />
+        <ProjectHistory {history} />
     </div>
 </div>
 

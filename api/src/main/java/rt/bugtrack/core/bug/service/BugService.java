@@ -20,7 +20,6 @@ import rt.bugtrack.core.bug.repository.BugHistoryRepository;
 import rt.bugtrack.core.bug.repository.BugRepository;
 import rt.bugtrack.core.bug.repository.StepRepository;
 import rt.bugtrack.core.bug.util.Status;
-import rt.bugtrack.core.project.dto.ProjectDTO;
 import rt.bugtrack.core.project.service.ProjectService;
 
 @Service
@@ -48,8 +47,7 @@ public class BugService {
                 .title(bug.getTitle())
                 .description(bug.getDescription())
                 .steps(bug.getSteps().stream()
-                        .map(step -> 
-                            StepDTO.builder()
+                        .map(step -> StepDTO.builder()
                                 .id(step.getId())
                                 .bugId(step.getBug().getId())
                                 .sortOrder(step.getSortOrder())
@@ -96,7 +94,9 @@ public class BugService {
     }
 
     public List<BugDTO> getReportedBugs(User user, Integer projectId, List<Status> statuses, String query) {
-        return bugRepository.findByProjectIdAndReporterAndStatusInAndTitleContainingIgnoreCase(projectId, user, statuses, query).stream()
+        return bugRepository
+                .findByProjectIdAndReporterAndStatusInAndTitleContainingIgnoreCase(projectId, user, statuses, query)
+                .stream()
                 .map(bug -> getBugDTO(user, bug))
                 .toList();
     }
@@ -159,8 +159,16 @@ public class BugService {
         // remove
         AtomicBoolean stepsUpdated = new AtomicBoolean(false);
         int stepsCount = existingSteps.size();
-        existingSteps.removeIf(step -> newSteps.stream()
-                .noneMatch(newStep -> newStep.getId().equals(step.getId())));
+        List<Step> extraSteps = existingSteps.stream().filter(
+                step -> newSteps.stream()
+                        .noneMatch(
+                                newStep -> newStep.getId() == null
+                                        ? false
+                                        : newStep.getId().equals(step.getId())))
+                .toList();
+        // remove all steps from existing which have same id with extra
+        existingSteps.removeAll(extraSteps);
+        stepRepository.deleteAllById(extraSteps.stream().map(Step::getId).toList());
         stepsUpdated.set(stepsCount != existingSteps.size());
         // add or update
         newSteps.forEach(step -> {

@@ -7,3 +7,15 @@ export type Project = {
     description?: string,
     editable?: boolean
 }
+
+export type ProjectHistory = {
+    id?: number,
+    user?: User,
+    projectId?: number,
+    title?: string,
+    description?: string,
+    changeTime?: number,
+    changeDateTime?: Date,
+    changedFields?: string[],
+    isCreated?: boolean
+}

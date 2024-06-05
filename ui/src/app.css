@@ -73,19 +73,39 @@ button.primary {
     border: 1px solid transparent !important;
     padding: 0.2em 1.2em;
     font-weight: 600 !important;
-    background-color: var(--color-primary-100) !important;
+    background-color: var(--color-primary-100);
     color: var(--color-surface-100) !important;
     transition: all 0.15s ease-in-out;
 }
-
 button.primary:hover {
     border-color: rgba(255, 255, 255, 0.5);
+    background-color: var(--color-primary-200);
+    transition: all 0.15s ease-in-out;
+}
+button.primary:focus,
+button.primary:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color !important;
+}
+button.primary:disabled {
+    background-color: var(--color-surface-500) !important;
+}
+
+button.secondary {
+    border-radius: 8px !important;
+    border: 1px solid transparent !important;
+    padding: 0.2em 1.2em;
+    font-weight: 600 !important;
+    border-color: var(--color-primary-100) !important;
+    transition: all 0.15s ease-in-out;
+}
+button.secondary:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    color: var(--color-surface-100) !important;
     background-color: var(--color-primary-200) !important;
     transition: all 0.15s ease-in-out;
 }
-
-button.primary:focus,
-button.primary:focus-visible {
+button.secondary:focus,
+button.secondary:focus-visible {
     outline: 4px auto -webkit-focus-ring-color !important;
 }
 

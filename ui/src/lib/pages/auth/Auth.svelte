@@ -24,7 +24,7 @@
         {/each}
     </nav>
     {#if sign === SignOptions.SIGNIN}
-        <SignIn on:fail={(e) => (errorMessage = e.detail)} />
+        <SignIn on:fail={(e) => {errorMessage = e.detail; sign = SignOptions.SIGNIN}} />
     {:else}
         <SignUp />
     {/if}

@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Bug } from "../types/Bug";
+import type { Bug, BugHistory } from "../types/Bug";
 import { authHeader } from "../../auth/utils/header";
 import { Status } from "../types/Status";
 
@@ -38,5 +38,17 @@ export class BugService {
         const response = await axios
             .put(url, bug, { headers: authHeader });
         return response.data as Bug;
+    }
+
+    async getHistory(bugId: number): Promise<BugHistory[]> {
+        const url = API_ENDPOINT + bugId + "/history";
+        const response = await axios
+            .get(url, { headers: authHeader });
+        const result = response.data as BugHistory[];
+        result.forEach(history => {
+            if (history.changeTime)
+                history.changeDateTime = new Date(history.changeTime);
+        })
+        return result;
     }
 }

@@ -5,6 +5,10 @@
     import type { PathItem } from "../../common/types/PathItem";
     import BugHistory from "../../core/components/bugs/BugHistory.svelte";
     import type { Bug } from "../../core/types/Bug";
+    import { escapeDescription } from "../../common/utils/formatting";
+    import type { Status } from "../../core/types/Status";
+    import StepList from "../../core/components/steps/StepList.svelte";
+    import type { BugHistory as BugHistoryItem } from "../../core/types/Bug";
 
     export let path: PathItem[] = [];
     export let bugId: number = 0;
@@ -12,29 +16,37 @@
     const service = new BugService();
     let bug: Bug = {};
     let editedBug: Bug = {};
+    let history: BugHistoryItem[] = [];
 
     let editing: boolean = false;
 
-    function getBug(id: number) {
-        service.getBug(id).then((response) => {
-            bug = response;
-        });
+    function onStatusChange(e: Event) {
+        editedBug = { ...bug };
+        editing = true;
+        const target = e.target as HTMLSelectElement;
+        editedBug.status = target.value as Status;
     }
-    function saveBug(newBug: Bug) {
-        service.saveBug(newBug).then((response) => {
-            bug = response;
-        });
+
+    async function getBug(id: number) {
+        const newBug = await service.getBug(id);
+        bug = {...newBug};
+        history = await service.getHistory(id);
+
     }
-    function escapeDescription(description: string) {
-        let tmpDiv = document.createElement("div");
-        tmpDiv.innerText = description;
-        return tmpDiv.innerHTML.replace("\n", "<br />");
+    async function saveBug(newBug: Bug) {
+        const savedBug = await service.saveBug(newBug);
+        bug = {...savedBug};
+        history = await service.getHistory(bugId);
+        window.location.reload();
     }
-    onMount(() => {
-        getBug(bugId);
+    onMount(async () => {
+        await getBug(bugId);
         path = [
             { name: "Projects", ref: "/" },
-            { name: "Project #" + bug.projectId, ref: "/" },
+            {
+                name: "Project #" + bug.projectId,
+                ref: "/project/" + bug.projectId,
+            },
             { name: "Bug #" + bugId, ref: "/bug/" + bugId },
         ];
     });
@@ -88,36 +100,70 @@
     {#if editing}
         <input
             type="text"
-            class="text-3xl w-full mt-1 mb-3"
+            class="text-3xl w-full mt-1"
             bind:value={editedBug.title}
-        />
-        <textarea
-            class="w-full"
-            rows="6"
-            bind:value={editedBug.description}
         />
     {:else}
         <p id="title" class="text-4xl mt-0 mb-4">{bug.title}</p>
         <hr class="w-1/4 mt-0" />
+    {/if}
+    {#if bug.editable}
+        <select
+            id="statusdd"
+            class="mt-3"
+            on:change={onStatusChange}
+            disabled={!bug.editable}
+            value={bug.status}
+        >
+            <option value="NEW">New</option>
+            <option value="ACTIVE">Active</option>
+            <option value="TESTING">Testing</option>
+            <option value="CLOSED">Closed</option>
+        </select>
+        <!-- TODO: Reporter -->
+    {:else}
+        <p id="status" class="mt-3">{bug.status}</p>
+    {/if}
+    {#if editing}
+        <textarea
+            class="w-full mt-3"
+            rows="6"
+            bind:value={editedBug.description}
+        />
+    {:else}
         <p class="mt-2">
-            {@html bug.description
-                ? escapeDescription(bug.description)
-                : ""}
+            {@html bug.description ? escapeDescription(bug.description) : ""}
         </p>
     {/if}
 </div>
 <div class="flex flex-row flex-grow mt-4">
-    <div class="w-2/3">
-        <div class="w-full text-xl text-center">Bug data</div>
+    <div id="slcontainer" class="w-2/3">
+        <StepList
+            steps={bug.steps}
+            editable={bug.editable || false}
+            on:stepsUpdated={(e) => {
+                editedBug = { ...bug };
+                editedBug.steps = e.detail;
+                saveBug(editedBug);
+            }}
+        />
     </div>
     <div class="w-1/3">
-        <BugHistory />
+        <BugHistory {history} />
     </div>
 </div>
 
 <style>
     #title {
         font-weight: bold;
+        color: var(--color-primary-400);
+    }
+    #statusdd {
+        padding: 5px;
+        border-radius: 3px;
+        background-color: var(--color-surface-200);
+    }
+    #status {
         color: var(--color-primary-400);
     }
     .editbtn {
@@ -130,4 +176,3 @@
         padding: 0 1rem;
     }
 </style>
-

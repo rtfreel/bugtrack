@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Project } from "../types/Project";
+import type { Project, ProjectHistory } from "../types/Project";
 import { authHeader } from "../../auth/utils/header";
 
 const API_ENDPOINT = import.meta.env.API_URL + "/project/";
@@ -31,5 +31,17 @@ export class ProjectService {
         const response = await axios
             .put(url, project, { headers: authHeader });
         return response.data as Project;
+    }
+
+    async getHistory(projectId: number): Promise<ProjectHistory[]> {
+        const url = API_ENDPOINT + projectId + "/history";
+        const response = await axios
+            .get(url, { headers: authHeader });
+        const result = response.data as ProjectHistory[];
+        result.forEach(history => {
+            if (history.changeTime)
+                history.changeDateTime = new Date(history.changeTime);
+        })
+        return result;
     }
 }
